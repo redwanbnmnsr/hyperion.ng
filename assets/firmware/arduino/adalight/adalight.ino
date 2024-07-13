@@ -73,7 +73,7 @@
  **************************************/
 
 // Adalight sends a "Magic Word" (defined in /etc/boblight.conf) before sending the pixel data
-uint8_t prefix[] = {'A', 'd', 'a'}, hi, lo, chk, i;
+uint8_t prefix[] = {'A', 'd', 'a'}, nled, i;
 
 unsigned long endTime;
 
@@ -186,16 +186,11 @@ void setup() {
       }
     }
 
-    // Hi, Lo, Checksum
+    // 00, 00, nled
     if (!checkIncommingData()) continue;
-    hi = Serial.read();
     if (!checkIncommingData()) continue;
-    lo = Serial.read();
     if (!checkIncommingData()) continue;
-    chk = Serial.read();
-
-    // if checksum does not match go back to wait
-    if (chk != (hi ^ lo ^ 0x55)) continue;
+    nled = Serial.read();
 
     memset(leds, 0, MAX_LEDS * sizeof(struct CRGB));
     transmissionSuccess = true;
@@ -203,7 +198,7 @@ void setup() {
     sum_g = 0;
     sum_b = 0;
 
-    int num_leds = min ( MAX_LEDS, (hi<<8) + lo + 1 );
+    int num_leds = min ( MAX_LEDS, nled);
 
     // read the transmission data and set LED values
     for (int idx = 0; idx < num_leds; idx++) {
