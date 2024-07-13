@@ -166,10 +166,7 @@ to this service over the network.
 
                         if args.ada:
                             numleds = len(data)/3
-                            hi = (numleds-1)/256
-                            lo = (numleds-1)&255
-                            sum = hi^lo^0x55
-                            ser.write ("Ada"+ chr(hi) + chr(lo) + chr(sum))
+                            ser.write ("Ada"+ ".." + chr(numleds))
 
                         ser.write(data)  # get a bunch of bytes and send them
                     except socket.error as msg:
